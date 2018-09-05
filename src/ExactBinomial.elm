@@ -414,16 +414,16 @@ model : Model
 model =
     let
         n =
-            (String.toInt "10")
+            (String.toInt "20")
 
         p =
             (String.toFloat "0.5")
 
         pTruth =
-            (String.toFloat "0.5")
+            (String.toFloat "0.4")
 
         x =
-            Nothing
+            Just 8
 
         xMsg =
             Err "Empty"
@@ -563,7 +563,7 @@ spec tail limit fullBinom trueBinom =
             removeTailsPred trueBinom
 
         fullPred =
-            \x -> (nullPred x) && (truePred x)
+            \x -> (nullPred x) || (truePred x)
 
         binom =
             filterXs fullPred fullBinom
@@ -662,7 +662,7 @@ update msg model =
                 new_model =
                     model
                         |> updateN txt
-                        |> updateX ""
+                        --|> updateXnewN
                         |> updateBinom
                         |> updateBinomTruth
                         |> updateSpec model.dist
@@ -674,7 +674,7 @@ update msg model =
                 new_model =
                     model
                         |> updateP txt
-                        |> updateX ""
+                        --|> updateX ""
                         |> updateBinom
                         |> updateSpec model.dist
             in
@@ -685,7 +685,7 @@ update msg model =
                 new_model =
                     model
                         |> updatePTruth txt
-                        |> updateX ""
+                        --|> updateX ""
                         |> updateBinomTruth
                         |> updateSpec model.dist
             in
@@ -762,6 +762,24 @@ updateN txt model =
                     txt
                 )
         }
+
+
+newXValue : BinomModel -> Maybe Int
+newXValue binom =
+    Just (floor binom.mean)
+
+
+updateXnewN : Model -> Model
+updateXnewN model =
+    { model
+        | x =
+            case model.binom of
+                Ok binom ->
+                    newXValue binom
+
+                _ ->
+                    model.x
+    }
 
 
 updateX : String -> Model -> Model
@@ -844,11 +862,11 @@ view model =
 sidebar model =
     div []
         [ h3 [] [ Html.text "Exact Binomial Probability" ]
-        , (inputGroup "Sample Size" "10" ChangeN "n = ")
+        , (inputGroup "Sample Size" "20" ChangeN "n = ")
         , outputVal model.n
         , inputGroup "Null probability" "0.5" ChangeP "Null: p = "
         , outputVal model.p
-        , inputGroup "True probability" "0.5" ChangePTruth "Truth: p = "
+        , inputGroup "True probability" "0.4" ChangePTruth "Truth: p = "
         , outputVal model.pTruth
         , br [] []
         , ButtonGroup.radioButtonGroup []
