@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Exact Binomial Probability</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+  </head>
+
+  <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- These scripts link to the Vega-Lite runtime -->
+  <script src="https://cdn.jsdelivr.net/npm/vega@3"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@3"></script>
+  <script src="main.js"></script>
+
+
+  <!-- katex stuff -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/KaTeX/0.6.0/katex.min.css">
+
+</head>
+<body>
+
+<div id="app"></div>
+<script>
+    var node = document.getElementById('app');
+    var app = Elm.ExactBinomial.embed(node);
+
+    var requestAnimationFrame = window.requestAnimationFrame || window.mozRequestAnimationFrame || window.webkitRequestAnimationFrame || window.msRequestAnimationFrame;
+
+  let updateChart = function(spec){
+    console.log(spec);
+    requestAnimationFrame(function(){
+      vegaEmbed("#vis", spec, {actions: false}).catch(console.warn);
+      });
+   }
+
+    app.ports.elmToJS.subscribe(updateChart);
+</script>
+    
+</body>
+</html>
